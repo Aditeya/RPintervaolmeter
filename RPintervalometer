@@ -1,0 +1,39 @@
+#!/usr/bin/env python3
+import sys
+from sense_hat import SenseHat
+from time import sleep
+
+sense = SenseHat()
+sense.set_rotation(180)
+sense.low_light = True
+
+def timer(s):
+    red   = [255,   0,  0]
+    green = [  0, 255,  0]
+    blue  = [  0,   0,255]
+    black = [  0,   0,  0]
+    
+    t = s >= 64
+    display = []
+    if (t):
+        display = [blue for i in range(64)]
+    else:
+        display = [blue for i in range(s)] + [black for i in range(64-s)]
+    
+    sense.set_pixels(display)
+    
+    ss = 64 if t else s
+    for i in range(0, ss):
+        if(t):
+            sleep(s/64)
+        else:
+            sleep(1)
+        display[i] = green
+        sense.set_pixels(display)
+    
+    sense.clear(red)
+    sleep(0.1)
+    sense.clear()
+
+num = sys.argv[1]
+timer(int(num))
