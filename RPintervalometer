@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 import sys
 import os
+import threading
+from timer import Timer
 from sense_hat import SenseHat
 from time import sleep
 
@@ -8,25 +10,19 @@ sense = SenseHat()
 sense.set_rotation(180)
 sense.low_light = True
 
-red   = [255,   0,  0]
-green = [  0, 255,  0]
-blue  = [  0,   0,255]
+os.system("gphoto2 --set-config datetime=now")
 
-
-def timer(s):
-    display = [blue for i in range(64)]
-    sense.set_pixels(display)
-    
-    for i in range(0, 64):
-        sleep(s/64)
-        display[i] = green
-        sense.set_pixels(display)
-    
-    sense.clear(red)
-    sleep(0.1)
-    sense.clear()
-
-
-os.system("echo Running Timer")
 num = sys.argv[1]
-timer(int(num))
+timer = Timer()
+timer_thread = threading.Thread(target=timer.run, args=(int(num),sense))
+timer_thread.start()
+
+run = True
+while(run):
+    for event in sense.stick.get_events():
+        if(event.action == "pressed"):
+            if(event.direction == "middle"):
+                timer_thread.terminate()
+                timer_thread.join()
+                sense.clear()
+                run = False
