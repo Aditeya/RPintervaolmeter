@@ -3,6 +3,7 @@ import sys
 import os
 import threading
 from timer import Timer
+from cam import Cam
 from sense_hat import SenseHat
 from time import sleep
 
@@ -14,17 +15,23 @@ os.system("gphoto2 --set-config datetime=now")
 
 
 num = sys.argv[1]
+
 timer = Timer()
 timer_thread = threading.Thread(target=timer.run, args=(int(num),sense))
+
+cam = Cam()
+cam_thread = threading.Thread(target=cam.run, args=(int(num),))
+
 timer_thread.start()
+cam_thread.start()
 
 run = True
 while(run):
     for event in sense.stick.get_events():
         if(event.action == "pressed"):
             if(event.direction == "middle"):
-                timer_thread.terminate()
-                timer_thread.join()
+                timer.terminate()
+                cam.terminate()
                 os.system("./mv2dir.sh")
                 sense.clear()
                 run = False

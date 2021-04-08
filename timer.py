@@ -14,7 +14,7 @@ class Timer:
         self._running = False
     
     def run(self, s, sense):
-        while True:
+        while self._running:
             timer(s, sense)
 
 def timer(s, sense):
