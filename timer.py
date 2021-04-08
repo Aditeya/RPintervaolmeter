@@ -26,7 +26,6 @@ def timer(s, sense):
         display[i] = green
         sense.set_pixels(display)
     
-    os.system("gphoto2 --keep")
     sense.clear(red)
     sleep(0.1)
     sense.clear()

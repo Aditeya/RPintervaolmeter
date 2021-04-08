@@ -1,1 +1,4 @@
 __pycache__
+*.jpg
+*.cr2
+pics/*

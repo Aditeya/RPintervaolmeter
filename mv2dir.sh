@@ -1,0 +1,1 @@
+mv capt* ./pics
