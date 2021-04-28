@@ -19,12 +19,8 @@ num = sys.argv[1]
 timer = Timer()
 timer_thread = threading.Thread(target=timer.run, args=(int(num),sense))
 
-#cam = Cam()
-#cam_thread = threading.Thread(target=cam.run, args=(int(num),))
-
 timer_thread.start()
 cam = subprocess.call(command, shell=True)
-#cam_thread.start()
 
 run = True
 while(run):
